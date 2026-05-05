@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verfahrensdokumentation – Mandanten-Fragebogen</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
+:root{
+  --navy:#1a237e;--blue:#3333cc;--blue-light:#e8e8f8;--accent:#3939C8;
+  --red:#c00000;--green:#388e3c;--gray:#f5f5f8;--border:#dde0f0;
+  --text:#1a1a2e;--muted:#6b7280;--shadow:0 2px 12px rgba(30,35,100,.08);--radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:#f0f1f8;color:var(--text);font-size:14px;line-height:1.6;}
+
+/* HEADER */
+.header{background:var(--navy);position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(26,35,126,.3);}
+.header-inner{max-width:1100px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
+.header-logo{height:52px;width:auto;display:block;}
+.header-title{color:#fff;font-size:17px;font-weight:600;}
+.header-subtitle{color:#8fa4e8;font-size:12px;margin-top:1px;}
+.header-badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#c5cef8;font-size:11px;padding:4px 12px;border-radius:20px;letter-spacing:.05em;text-transform:uppercase;font-weight:500;white-space:nowrap;}
+.progress-bar{background:rgba(255,255,255,.1);height:4px;}
+.progress-fill{height:4px;background:linear-gradient(90deg,#5c6bc0,#7986cb);transition:width .4s;}
+
+/* NAV */
+.nav-wrap{background:#fff;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;}
+.nav-wrap::-webkit-scrollbar{display:none;}
+.nav{max-width:1100px;margin:0 auto;padding:0 32px;display:flex;}
+.nav-tab{padding:13px 14px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .15s;display:flex;align-items:center;gap:6px;user-select:none;}
+.nav-tab:hover{color:var(--accent);background:var(--blue-light);}
+.nav-tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600;}
+.tab-num{background:var(--blue-light);color:var(--accent);font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.nav-tab.active .tab-num{background:var(--accent);color:#fff;}
+
+/* MAIN */
+.main{max-width:1100px;margin:0 auto;padding:28px 32px 90px;}
+.section{display:none;}
+.section.active{display:block;animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+.section-hero{background:linear-gradient(135deg,var(--navy),var(--blue));border-radius:var(--radius);padding:22px 28px;margin-bottom:20px;display:flex;align-items:center;gap:16px;}
+.hero-icon{width:46px;height:46px;background:rgba(255,255,255,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.section-hero h2{color:#fff;font-size:18px;font-weight:700;margin-bottom:2px;}
+.section-hero p{color:#99aaee;font-size:12px;}
+
+/* CARD */
+.card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow);}
+.card-header{background:var(--blue-light);border-bottom:1px solid var(--border);padding:10px 18px;display:flex;align-items:center;gap:10px;}
+.card-num{width:22px;height:22px;background:var(--accent);color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.card-title{font-size:13px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.05em;}
+.card-body{padding:18px;}
+
+/* FORM */
+.form-row{display:grid;grid-template-columns:260px 1fr;align-items:start;gap:12px;padding:9px 0;border-bottom:1px solid #f0f1f8;}
+.form-row:last-child{border-bottom:none;}
+.form-label{font-size:13px;font-weight:500;color:var(--text);padding-top:8px;line-height:1.4;}
+.req{color:var(--red);font-weight:700;}
+.opt-note{color:var(--muted);font-weight:400;font-size:11px;display:block;}
+.form-input,.form-select,.form-textarea{width:100%;padding:8px 12px;font-size:13px;font-family:'DM Sans',sans-serif;border:1.5px solid var(--border);border-radius:7px;background:#fafbff;color:var(--text);transition:border-color .15s,box-shadow .15s;outline:none;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(57,57,200,.1);background:#fff;}
+.form-textarea{resize:vertical;min-height:70px;}
+.radio-group{display:flex;gap:8px;padding-top:6px;flex-wrap:wrap;}
+.radio-option{display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;padding:6px 14px;border:1.5px solid var(--border);border-radius:20px;transition:all .15s;user-select:none;}
+.radio-option:hover{border-color:var(--accent);background:var(--blue-light);}
+.radio-option.sel{background:var(--blue-light);border-color:var(--accent);color:var(--accent);font-weight:600;}
+.check-group{display:flex;flex-direction:column;gap:4px;padding-top:5px;}
+.check-option{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;padding:3px 0;}
+.check-option input{accent-color:var(--accent);width:15px;height:15px;}
+
+/* MULTI-ITEM */
+.items-container{display:flex;flex-direction:column;gap:10px;}
+.item-block{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#fafbff;}
+.item-block-header{background:var(--blue-light);padding:9px 14px;display:flex;align-items:center;justify-content:space-between;}
+.item-block-title{font-size:13px;font-weight:600;color:var(--navy);}
+.item-block-body{padding:12px 14px;}
+.btn-remove{background:none;border:1px solid #ffaaaa;color:#c00000;border-radius:6px;padding:3px 9px;font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s;}
+.btn-remove:hover{background:#fff0f0;}
+.btn-add{display:flex;align-items:center;gap:8px;background:#fff;border:2px dashed var(--accent);color:var(--accent);border-radius:var(--radius);padding:11px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;width:100%;justify-content:center;margin-top:4px;}
+.btn-add:hover{background:var(--blue-light);}
+
+/* MISC */
+.hint{background:#eef2ff;border-left:3px solid var(--accent);border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:var(--navy);margin:8px 0;font-style:italic;}
+.warn{background:#fff8e1;border-left:3px solid #f59e0b;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#7c4a00;margin:8px 0;}
+.info{background:#e8f5e9;border-left:3px solid #388e3c;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#1b5e20;margin:8px 0;}
+.tag-opt{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-left:6px;vertical-align:middle;background:#e8f5e9;color:#2e7d32;}
+.subsection{display:none;padding:12px 14px;border-top:1px solid #f0f1f8;background:#f8f9ff;}
+.subsection.show{display:block;}
+.tile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:16px;}
+.tile{border:1.5px solid var(--border);border-radius:var(--radius);padding:16px 8px;text-align:center;cursor:pointer;transition:all .15s;background:#fff;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);}
+.tile:hover{border-color:var(--accent);background:var(--blue-light);color:var(--accent);}
+.tile.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.tile-icon{font-size:20px;margin-bottom:6px;}
+
+/* UPLOAD */
+.upload-zone{border:1.5px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden;background:#fafbff;transition:border-color .15s;}
+.upload-zone.drag-over{border-color:var(--accent);background:var(--blue-light);}
+.upload-zone-header{background:var(--blue-light);padding:9px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.upload-zone-label{font-size:13px;font-weight:600;color:var(--navy);}
+.upload-zone-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.btn-upload-real{padding:5px 12px;border:1.5px solid var(--accent);border-radius:6px;color:var(--accent);background:#fff;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .15s;flex-shrink:0;}
+.btn-upload-real:hover{background:var(--accent);color:#fff;}
+input[type=file].hidden-file{display:none;}
+.file-list{padding:6px 14px;display:flex;flex-direction:column;gap:3px;}
+.file-item{display:flex;align-items:center;gap:8px;padding:5px 8px;background:#fff;border:1px solid var(--border);border-radius:6px;font-size:12px;}
+.file-item-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);}
+.file-item-size{color:var(--muted);font-size:11px;flex-shrink:0;}
+.file-item-remove{background:none;border:none;color:#c00000;cursor:pointer;font-size:13px;padding:0 2px;flex-shrink:0;}
+.drop-hint{padding:10px 14px;text-align:center;color:var(--muted);font-size:11px;}
+
+/* ACTIONS */
+.actions{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);padding:12px 32px;display:flex;justify-content:space-between;align-items:center;z-index:99;box-shadow:0 -4px 16px rgba(26,35,126,.08);}
+.btn{padding:9px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .15s;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{background:var(--navy);}
+.btn-secondary{background:var(--gray);color:var(--text);border:1px solid var(--border);}
+.btn-secondary:hover{background:var(--blue-light);}
+.btn-success{background:var(--green);color:#fff;}
+.btn-success:hover{background:#2e7d32;}
+.step-info{font-size:13px;color:var(--muted);font-weight:500;text-align:center;}
+.step-info strong{color:var(--navy);}
+
+/* PDF OVERLAY */
+.overlay{display:none;position:fixed;inset:0;background:rgba(26,35,126,.8);z-index:200;align-items:center;justify-content:center;}
+.overlay.show{display:flex;}
+.overlay-box{background:#fff;border-radius:16px;padding:36px 44px;text-align:center;max-width:460px;width:90%;}
+.overlay-box h3{font-size:19px;font-weight:700;color:var(--navy);margin-bottom:8px;}
+.overlay-box p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px;}
+.overlay-steps{text-align:left;background:var(--blue-light);border-radius:8px;padding:14px 18px;margin-bottom:18px;font-size:13px;line-height:2;}
+.overlay-steps strong{color:var(--navy);}
+.overlay-email{background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#166534;}
+.overlay-email a{color:var(--accent);font-weight:600;}
+.btn-big{width:100%;padding:13px;font-size:14px;font-weight:700;border-radius:10px;cursor:pointer;border:none;font-family:inherit;margin-bottom:8px;transition:all .15s;}
+.btn-pdf{background:var(--accent);color:#fff;}
+.btn-pdf:hover{background:var(--navy);}
+.btn-close{background:var(--gray);color:var(--text);border:1px solid var(--border);}
+
+/* PRINT / PDF */
+@media print{
+  .actions,.nav-wrap,.overlay{display:none!important;}
+  .section{display:block!important;page-break-after:always;}
+  .section:last-child{page-break-after:avoid;}
+  body{background:#fff;}
+  .section-hero{background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .header{position:relative!important;}
+}
+
+@media(max-width:700px){
+  .form-row{grid-template-columns:1fr;}
+  .main{padding:14px 14px 90px;}
+  .header-inner{padding:10px 14px;}
+  .tile-grid{grid-template-columns:repeat(2,1fr);}
+  .actions{padding:10px 14px;}
+}
+</style>
+</head>
+<body>
+
+<!-- PDF/FERTIG OVERLAY -->
+<div class="overlay" id="finishOverlay">
+  <div class="overlay-box">
+    <div style="font-size:44px;margin-bottom:10px;">✅</div>
+    <h3>Fragebogen vollständig!</h3>
+    <p>Bitte speichern Sie das Formular als PDF und schicken Sie es per E-Mail an die Kanzlei.</p>
+    <div class="overlay-steps">
+      <strong>So geht's:</strong><br>
+      1️⃣ &nbsp;Klicken Sie auf <em>„Als PDF speichern"</em><br>
+      2️⃣ &nbsp;Im Druckdialog: Drucker = <strong>„Als PDF speichern"</strong><br>
+      3️⃣ &nbsp;PDF auf Ihrem Computer speichern<br>
+      4️⃣ &nbsp;PDF per E-Mail an die Kanzlei senden
+    </div>
+    <div class="overlay-email" id="emailHint">
+      📧 Bitte senden Sie das PDF an:<br>
+      <strong><a href="mailto:info@die-berater-llp.de" id="kanzleiEmail">info@die-berater-llp.de</a></strong>
+    </div>
+    <button class="btn-big btn-pdf" onclick="doPrint()">🖨️ Als PDF speichern</button>
+    <button class="btn-big btn-close" onclick="document.getElementById('finishOverlay').classList.remove('show')">← Zurück zum Fragebogen</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAGRAXsDASIAAhEBAxEB/8QAHQABAAMBAQEBAQEAAAAAAAAAAAYHCAUEAwIBCf/EAFIQAAEDBAADBAMKCQgIBgMBAAEAAgMEBQYRBxIhEzFBUQgiYRQVIzI3c4GRsbIWNVJxdZKztNEXNDZCVFWEoiQzOFZydJOhKGJmdqPBU8LD8P/EABoBAQACAwEAAAAAAAAAAAAAAAABBAIDBQb/xAA1EQACAQMCAwQKAgICAwAAAAAAAQIDBBESMQUTIUFRcaEUMjM0YYGRscHRIiPh8FJyNWLx/9oADAMBAAIRAxEAPwDZaIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAKL8U6+stmGVVZQVD6eoY+MNkZ3jbwCpQobxm/oBWfORffC20VmpFPvMZeqyofw3yz+/av6x/BPw3yz+/av6x/BR5F3OVDuRU1PvJD+G+Wf37V/WP4J+G+Wf37V/WP4KPInKh3Ian3kh/DfLP79q/rH8E/DfLP79q/rH8FHkTlQ7kNT7yQ/hvln9+1f1j+Cfhvln9+1f1j+CjyJyodyGp95Ifw3yz+/av6x/BPw3yz+/av6x/BR5Sjh/h9XlFfs80Nvid8PPr/K3zd9nf5A4zjSgtUkiU5N4RIeH8+b5RX7N9rYbfE74efY/Vb06u+zv8gZ5xMzqx8O8WddrzM57tclLTB25amQDo0b/wC7u4fUD588y3GOFWFCrq2tiijaY6OjiPwlRJ+SPtc493eeugcL8Sc2vme5LNfL5PzOPqwQMJ7Onj30YweXt7yepWq0s3ez1tYgvMr3t6rWOmPWT8iS3/jnxLul4qa+HJKq3RTPLmUtNpscTfBo2N9B4nqV4f5Y+J/++l0/Xb/BQNF6RWtFLCgvojzbuazedb+pPP5Y+J/++l0/Xb/BP5Y+J/8AvpdP12/wUDRPRqP/AAX0RHpFb/k/qyefyx8T/wDfS6frt/gr69D3Ncqyy5ZHHkd8q7mymhp3QiYg8hcX71oeOh9SyStLegj+Nsr+YpvvSKjxOhSjazcYpPp2fFF7h1apK5inJtde34Gq0RF489WEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAUN4zf0ArPnIvvhTJQ3jN/QCs+ci++Ftoe1j4mM/VZQCIi9AUwiIgCIiAIilHD/D6vKK/Z5obfE74efX+Vvm77O/yBxnNQWqQSbeEOH+H1eUV+zzQ2+J3w8+v8rfN32d/kDaueZbjHCrChV1bWxRRtMdHRxH4Sok/JH2uce7vPXQLPMtxjhVhQq6trYoo2mOjo4j8JUSfkj7XOPd3nroHC/EnNr5nuSzXy+T8zj6sEDCezp499GMHl7e8nqVotrad/PVLpBeZovLyNpHTHrJ+Q4k5tfM9yWa+XyfmcfVggYT2dPHvoxg8vb3k9So0iL08IRhFRisJHl5Sc25SeWwiIsiAiIgC0t6CP42yv5im+9Is0rS3oI/jbK/mKb70i5/FfdJ/L7ovcM96h8/szVaIi8UewCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAKG8Zv6AVnzkX3wpkobxm/oBWfORffC20Pax8TGfqsoBERegKYREQBEUo4f4fV5RX7PNDb4nfDz6/yt83fZ3+QOM5qC1SCTbwhw/w+ryiv2eaG3xO+Hn1/lb5u+zv8gbVzzLcY4VYUKura2KKNpjo6OI/CVEn5I+1zj3d566BZ5luMcKsKFXVtbFFG0x0dHEfhKiT8kfa5x7u89dA4X4k5tfM9yWa+XyfmcfVggYT2dPHvoxg8vb3k9StFtbTv56pdILzNF5eRtI6Y9ZPyHEnNr5nuSzXy+T8zj6sEDCezp499GMHl7e8nqVGkRenhCMIqMVhI8vKTm3KTy2ERFkQEREAREQBaW9BH8bZX8xTfekWbaSnnq6qKlpYZJ55nhkUUbS5z3E6AAHUknwW3fRk4WVfDywVVfeJibxdWxmenaQWUzG7LWb8Xesdnu8B3bPK4vVhC2cG+r2+p0uFUpSuFJLot/oXAiIvHnrAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgChvGb+gFZ85F98KZKG8Zv6AVnzkX3wttD2sfExn6rKAREXoCmERSjh/h9XlFfs80Nvid8PPr/ACt83fZ3+QOM5qC1SCTbwhw/w+ryiv2eaG3xO+Hn1/lb5u+zv8gbVzzLcY4VYUKura2KKNpjo6OI/CVEn5I+1zj3d566BZ5luMcKsKFXVtbFFG0x0dHEfhKiT8kfa5x7u89dA4X4k5tfM9yWa+XyfmcfVggYT2dPHvoxg8vb3k9StFtbTv56pdILzNF5eRtI6Y9ZPyHEnNr5nuSzXy+T8zj6sEDCezp499GMHl7e8nqVGkRenhCMIqMVhI8vKTm3KTy2ERFkQEREAREQBfSkp56uqipaWGSeeZ4ZFFG0uc9xOgAB1JJ8EpKeerqoqWlhknnmeGRRRtLnPcToAAdSSfBbP9HHgrBhNLFkeRwxz5JMzbGHTm0LSPit8DIR3u8O4dNk07y8haw1S37EWrS0nczwtu1j0ceCsGE0sWR5HDHPkkzNsYdObQtI+K3wMhHe7w7h02Ta9qyGgul7rrZQv7Y0LW9tK0+rzEkco89a6qAcVM/7PtbFYp/X6sqalh+L5sYfPzP0Bef0e/55ePm4vtcvLVo1K0ZV6r69h6ujCFFKnTXQt5ERc8shERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAFDeM39AKz5yL74UyUN4zf0ArPnIvvhbaHtY+JjP1WUAiKUcP8Pq8or9nmht8Tvh59f5W+bvs7/IHvTmoLVIppNvCHD/D6vKK/Z5obfE74efX+Vvm77O/yBtXPMtxjhVhQq6trYoo2mOjo4j8JUSfkj7XOPd3nroFnmW4xwqwoVdW1sUUbTHR0cR+EqJPyR9rnHu7z10DhfiTm18z3JZr5fJ+Zx9WCBhPZ08e+jGDy9veT1K0W1tO/nql0gvM0Xl5G0jpj1k/IcSc2vme5LNfL5PzOPqwQMJ7Onj30YweXt7yepUaRF6eEIwioxWEjy8pObcpPLYREWRAREQBERAF9KSnnq6qKlpYZJ55nhkUUbS5z3E6AAHUknwSkp56uqipaWGSeeZ4ZFFG0uc9xOgAB1JJ8Fs/0ceCsGE0sWR5HDHPkkzNsYdObQtI+K3wMhHe7w7h02TTvLyFrDVLfsRatLSdzPC27WPRx4KwYTSxZHkcMc+STM2xh05tC0j4rfAyEd7vDuHTZPY4qZ/2fa2KxT+v1ZU1LD8XzYw+fmfoCcVM/7PtbFYp/X6sqalh+L5sYfPzP0BVIvPQhOvPnVt+xHqIxhQhy6ewVp+j3/PLx83F9rlVitP0e/wCeXj5uL7XLZd+xkTT9ZFvIiLhlsIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAobxm/oBWfORffCmS5GX2RmQ2V9rkmMMckjHPc0bPK1wJA9p0tlKSjNNkSWU0Ubw/wAPq8or9nmht8Tvh59f5W+bvs7/ACBtXPMtxjhVhQq6trYoo2mOjo4j8JUSfkj7XOPd3nroFnmW4xwqwoVdW1sUUbTHR0cR+EqJPyR9rnHu7z10DhfiTm18z3JZr5fJ+Zx9WCBhPZ08e+jGDy9veT1K7FtbTv56pdILzOXeXkbSOmPWT8hxJza+Z7ks18vk/M4+rBAwns6ePfRjB5e3vJ6lRpEXp4QjCKjFYSPLyk5tyk8thERZEBERAEREAX0pKeerqoqWlhknnmeGRRRtLnPcToAAdSSfBKSnnq6qKlpYZJ55nhkUUbS5z3E6AAHUknwWz/Rx4KwYTSxZHkcMc+STM2xh05tC0j4rfAyEd7vDuHTZNO8vIWsNUt+xFq0tJ3M8LbtY9HHgrBhNLFkeRwxz5JMzbGHTm0LSPit8DIR3u8O4dNk9jipn/Z9rYrFP6/VlTUsPxfNjD5+Z+gJxUz/s+1sVin9fqypqWH4vmxh8/M/QFUi89CE68+dW37EeojGFCHLp7BERXTEK0/R7/nl4+bi+1yqxWn6Pf88vHzcX2uVa79jIzp+si3kRFwy2EREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAUd4j5bQYPh1dktyjlmhpWgNiiHrSPcQ1rd+GyR18FIlUvpc/IZdvn6b9s1b7amqlaMJbNo03E3TpSkt0mY94k5tfM9yWa+XyfmcfVggYT2dPHvoxg8vb3k9So0iL3kIRhFRisJHiJSc25SeWwiIsiAiIgCIiAL6UlPPV1UVLSwyTzzPDIoo2lznuJ0AAOpJPglJTz1dVFS0sMk88zwyKKNpc57idAADqST4LZ/o48FYMJpYsjyOGOfJJmbYw6c2haR8VvgZCO93h3DpsmneXkLWGqW/Yi1aWk7meFt2sejjwVgwmliyPI4Y58kmZtjDpzaFpHxW+BkI73eHcOmyexxUz/s+1sVin9fqypqWH4vmxh8/M/QE4qZ/2fa2KxT+v1ZU1LD8XzYw+fmfoCqReehCdefOrb9iPURjChDl09giIrpiEREAVp+j3/PLx83F9rlVitP0e/wCeXj5uL7XKtd+xkZ0/WRbyIi4ZbCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAKpfS5+Qy7fP037ZqtpVL6XPyGXb5+m/bNVqy94p+K+5WvPd5+DMMIiL3Z4oIiIAiIgC+lJTz1dVFS0sMk88zwyKKNpc57idAADqST4JSU89XVRUtLDJPPM8MiijaXOe4nQAA6kk+C2f6OPBWDCaWLI8jhjnySZm2MOnNoWkfFb4GQjvd4dw6bJp3l5C1hqlv2ItWlpO5nhbdrHo48FYMJpYsjyOGOfJJmbYw6c2haR8VvgZCO93h3DpsnscVM/7PtbFYp/X6sqalh+L5sYfPzP0BOKmf9n2tisU/r9WVNSw/F82MPn5n6AqkXnoQnXnzq2/Yj1EYwoQ5dPYIiK6YhERAEREAVp+j3/PLx83F9rlVitP0e/55ePm4vtcq137GRnT9ZFvIiLhlsIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAql9Ln5DLt8/Tftmq2lVHpZxSzcELtHDG+R5nptNa0k/wCuarNl7xDxX3K157vPwZhVF6ve64f2Cq/6Lv4J73XD+wVX/Rd/Be71I8XhnlRer3uuH9gqv+i7+Ce91w/sFV/0XfwTUhhnlX0pKeerqoqWlhknnmeGRRRtLnPcToAAdSSfBemC0XWeeOCC2VsksjgxjGwOJc4nQAGup2tjejjwVgwmliyPI4Y58kmZtjDpzaFpHxW+BkI73eHcOmyal5e07WGp9X2ItWlnO5npW3ax6OPBWDCaWLI8jhjnySZm2MOnNoWkfFb4GQjvd4dw6bJ7HFTP+z7WxWKf1+rKmpYfi+bGHz8z9AX24qZtUs7WxWIS8/VtTVMaenmxh8/M/QFUfuWp/s836hXnoQnXnzq2/Yj08YQoQ5dNdD5Ivr7lqf7PN+oU9y1P9nm/UKuZMT5Ivr7lqf7PN+oU9y1P9nm/UKZB8kX19y1P9nm/UKe5an+zzfqFMg+SL6+5an+zzfqFPctT/Z5v1CmQfJWn6Pf88vHzcX2uVY+5an+zzfqFWjwAiljrLv2kb2bji1zNI31cq92/6ZGdP1kW2iIuGWwiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIqn4mYnxKht1xvGIcSbi2SJslQy3VNJA5rgNu7NjwwEdOg2D4bPis64RxO40ZflVBjdozCY1tbIWRmSGIMaA0uc5xDCdBrSToHuXRocOdeDnCawt9+nkUK1+qM1CUHl7bdfM3EipIYZ6QVLCXUvFS0zy9D2dRb2cp9nN2TiB+YKLXvi3xh4aV0EXELF7fcrfI7lZWU3wYlPskbtoPeeVzQenksI2LqPFOcZPuz180jKV6oLNSDS78fps0siiHC/iLjXES0PrrDUuE0OhU0kwDZoCe7mGzsHrpw2Do+IIUvVScJU5OMlhotwnGcdUXlBFk30tc9zqy8RorNbLxcbNbYaWOanNHM6E1Bdvme5zdF2iC3ROvV7uqvrgPfb5kvCiyXnImEXCeJ3PIW8pma17msk14czQD5HvHQhWq1lOlQjWbWJFaleRqVpUUnlE4REVIthERAEREARRPO8ZyK9yNnx/OrljkrYgzs4qaGeFxBJ5i1zebfXXR2tAdO/eS874m8ZMPy6441cszmfU0MvI58cEXK8EBzXDbO4tIP0q9a2LuukJLPd1/RSub1W3WcXjv6fs3AioOxYd6QFws1LXVXFClopaiJsvuc0jHmPmAIa4iMDY311se0qM5zkPpEcL4G3O83W3X60NcGGdtLG+NpPcH8rGSN3vWz03033KY2GuWmFSLfz/AERK90R1SpyS+X7NRIqn4D8aLbxJbLbaqkbbL7Tx9o+nD+aOZm9F0ZPXp0209RvvPXVsKrWozozcJrDLVKrCtFTg8oIiLUbAiIgCIiAIiIAiIgCIvBcrza7dXUFBW10MNXcZTFSQOd68zg0uPKO/QA2T3Dp5hSk3sQ2lue9ERQSEREAREQBERAEREAREQBERAEREB5bv+Kaz5h/3SsMein8vmN/4r91mW57v+Kaz5h/3SsMein8vmN/4r91mXb4Z7tX8Pwzj8R94oeP5RvFczKbDa8mx+ssV5pm1NFVxmORhHUeTmnwcD1B8CAumi4qbi8o67Sawz/P2x3G78HeMknLI9zrVWup6pregqafm6jW/6zdOG+48p8Fv6lnhqqWKpp5BJDMwSRvHc5pGwfqWI/TCoWUfGusmY0N92UdPO7XieXk3/kWoOD7n5FwJx2J1fV0r5bVHTmppZA2ZnIOz21xB071e/S7nFIqrRpV3u9/9+pxeGt0q1SgtlsTG8WWzXhsTbvaaC4tidzRiqp2Shh8xzA6K9sQjEbRFyhgGmhvcB7Fib0nsayPDMjpKWpzK+Xy2XGF8kHu+sfJIwtID2OG9HvadgAdda6LVPA75HsS/RMH3AqNxacqhGqp5TLtC65laVNxw0TJfmWSOGMySyMjYO9zjoD6VTXpO8Wanh/a6azWEsF+uMZe2ZwDhSxA65+U9C4nYG+nQk92jw8M9H+HILTT33iffL3dr1VxiV0BqiG04cN8hJBcXDx0QAegB1s4wtEqaq1ZaU9umWzOd03UdOlHLW/XCRoGKSOWMSRPa9h7nNOwfpX6WQeMnD298FKmky3AMhudPa5pxFKx0u3xSEEgP0A2SM6Pxh00Ad7WguBWfs4i4HDeZIo4LhDIaauiZ8VsrQDzN315XAgjy2Rs6U17PRSVanLVF/LHiRRu9dR0px0yXzyTxERUS4Fg70rPl8yT/AAv7rCt4rB3pWfL5kn+F/dYV2uBe8S8Pyjkca9gvH8M3PaPxTR/MM+6F48zt1Ld8Ru9srWNfT1VFLFIHDegWHr+cd/0LhW/iNw+gtNN2uc40CyBgc0XSEuB5R00HbVV8c+PuOnGa3G8Jqn3a53CI0xqYo3CKBr/VdykgF7yCQOXoCd76aNGja1qlVKMXuXK1zRp025SWxQXo81dTRcasWlpebnfWiFwH5DwWO/yuK/0EWWfRQ4Q3mkyCHOsnoZaCKmY73tppm8skj3NLTI5p6hoaToHqSQe4Deplb4zWhUrrQ84WCrwilOnRerplhfOSop45WxSTxMkf8VrngF35gsw5vn2W8VuK38nWC3WWz2eGWSOprIXEPlaz/WSlzevJ001oI5tjZ6jUyPoxYA+2uhmrr7LXPbt1a6pbzF/ny8utb8D19viq8rOFJLnTw31wln69UWFdTqt8mOUu1vH03LwRYys+X5nwH4nyYveblPdbFE9vaQPc5zHwP6iWIHfI4DwHQkEHfQrU2a467MrJTsoMrvlkaW9rFU2mpERkDgNFx1tzfHQI7+9Y3FnyJRzL+MtmTQu+dGWI/wAluiTOc1o24gDYHU+J7ke5rGF73BrWjZJOgAsDUrbtj/H602vJb3UV7rTkdMyWpnme8FjJ2nn9YkgcvX2KfZHjXFvjrWz5DTs9wYy+V3vXT1tSYouzB01wYAS5xHUvI0TvR0NC3PhSg05VEotZz/u5WhxNzTUabck9jXcb2SMD2Oa9rhsOadghfyR7I2F8j2sY3qXOOgFSmeZZdODnAGwUfZQfhD7nht8IJD2RSNZ68nk4ADp7SPDarXgfw2q+MNPW5hxByC71tKypMFPCKjrK8AFxJIPKwcwADQPHu11rwsU6cqs5YinjO+TfO8amqUI5k1nuwa0gmhnZzwyslbvXMxwI39C/aynxx4PxcM7AM44f3m7W80c0baqP3Sdsa5wa17XN0fjEAg73zK3/AEbc+q8/4eNrLo5rrrQTmkq3tby9qQAWyaHQbB6+0HoBpY1bNKjzqcsxzjbDRlSum6vJqRxLfvTLNWNMNvt2v/pfUtRdq6WqdBdqungDj6sUTGytaxo7gAB4d52T1JWkOJHDC2Zzdaa4V2QZJbH08HYtjttY2FjhzF23Asds9e/8yx9g2K0t04+NxKW43OCmN0qqf3VBMG1Omdpp3Pykcx5Rs68Sr3DKdPl1Hnrp7tilxGdTmU1jpnv3N+IqnsXAqxWi90F2hy/NaiSiqY6hkU9yY6OQscHBrx2Y2060RsdFK+Lmb0nD7B6vIqmLt5GERUsHNrtpnfFbvwHQk+xpXKdKMpqFJ6m/hg6aqyUXKosY+OSWr5wVFPUAmCeKUN7+R4dr6lmDhfg2R8bqWbMeI2SXM2eWdzKK30snZxv5TouDdFrWA7b0HMSDs9Nn2cVvR9oscx2oyjh3crpQ3G2RuqHwmpJMjGjbjG4AOa8Ab7zvWuiteh0Y1OVOp/Lw6Z8c/grel1ZQ5kaf8fHrjwNLoqD9FLi1ccwjqcVyWf3RdaOHt6erd8eoiBAcH+b2kt695B69QSfP6T2FZBQ4vc8ytGd5L2UEwlqLbLXO7BrHvDdRBvLyhpcOh303188PQnGvyKksMz9MUqHOprKNB8zeYt2OYDZG+uv/APAr8ulibK2J0jBI/fK0uG3a79DxWJeCeZX2wYPkVuxiKasym/V1PS29rG8726ZIZJdH8ka6noOYE9AVYPBng5xHsXFmzZrlc1NUNYZ3Vbn1xmqAXwSMHMSNO9Zw7nHvW6tw2NHVrqJY2730/wBRppcQdXTog3nfuXX/AFmnERFyzpBERAEREAREQHlu/wCKaz5h/wB0rDHop/L5jf8Aiv3WZbnu/wCKaz5h/wB0rDHop/L5jf8Aiv3WZdvhnu1fw/DOPxH3ih4/lG8URCQBs9AuIdgxT6Z8rJOMgY07MVsgY72Hb3fYQtK+jhA+n4I4vG/vNI5/0Okc4f8AYrHfGW8uzrjNeKu1A1Qq61tJRCPr2oYGxMLf+LlBH/Et44haGY/ilpsUbmubb6KGm5gNB3IwN39Ot/Su9xL+u0pUnv8A4/ycTh/9l1VqLb/P+DNHp3fjbFPmKn70avngd8j2JfomD7gVDend+NsU+YqfvRq+eB3yPYl+iYPuBabn/wAfS8X+Tbb+/wBXwX4MrekTVVt39JeajpOykmgqaKkpGz77Pm5YyA7X9Xne7fsKvf8A8SP/AKD/APmWf/SfhqrB6QVwucLSxz3UtdTE+JEbBv8AXY76ltLFr1R5FjlvvtveHU1dTsnj670HDej7Qeh9oW69qcu3oyUU1jtXwRqs4a69VOTTz2PxKN4gYjx7zjGJ8evRwoUcz2PcYHyteC1wcNEg+I8l3/Ri4bZRw5pr9T5FLQPjrnwPpxSzOfotEgfvbRrvZ9RVyoudO+nKk6SSUX3I6EbKEaqqtttd7CIipFsLB3pWfL5kn+F/dYVvFYO9Kz5fMk/wv7rCu1wL3iXh+UcjjXsF4/hmorfwP4Vz2ynfLiFMXSQtLiKiYEktG+5/RRHO/RnxqppH1mEVdXYrpFt8Eb53SQOcO4Eu29v/ABAnXkVedo/FNH8wz7oXqVCN9cQllTf1yXZWdCccOCMZ8LONeY4Hln4NZxU1VfbIKg0tWyrdzz0ZDuUua/qXBv5JJGh00tY5tczbcEvl5pZRultlRVRSMOx6sTnAjXf3LFnpXQ08PHW+inDWl7ad8gHg8wMJ+vofpWq8Zo6u++jlQ26VjnVNdiracD+s4vpuVp/Odj610uIUqbjSrpY1Yz9zn2FWopVKDedOcGXvRghzt2TXWowFtk93Mogyd1z5+URueDpvL47aPqWgP/Ej/wCg/wD5lQ3og5JDYOLcdBVvEcN4pnUQLjoCXYcz6SWlo9rlt1OLVXTuOsU8rtRHC6SqUOkmsPsZlXiZwb4x8Qb/AA3q/SYqyqipm0zfc08jGljXOcNgtPXbz1/MtG8PbbX2XBbFZ7o+N9bQ2+GmmdG4uaXMYG9Ce/u713UXNr3k60FCSSS2wdGjaQozc03l95g/irbPfr0l7jZtke777FTbB0RzuY3/AO1uujp4KOkhpKWJkMEEbY4o2DTWNaNAD2ABYnyj/bBh/wDddH+2jW3Ve4rJ6KK/9f0UuGRWuq/ieG7Wa0XdsbbtaqG4NiJMYqqdkoYT365gddwX0t9BbrTR+57fR0tBTNJd2cETY2A+J0AAq+9IXiaOGuJRVFJDHUXe4PdFRRyfEbygF8jh4hu29PEuHhtVNwl4c3/jBaxmPEnKbvVWyaVwpKGObkbKGu052visZzAjTQCdE7HTdSlauVHm1JaYfXPgi1UuVGry6ccy+mPFlmektfbFLwZyOgZeLa+qkiYI4BUsMjnNmYSA3eyQoD6CLne8+Vt2eUVFMQN9N8sn8Auxxv4UcO8V4N3+42bG6alrKeKMxVD5ZJHtcZWN6F7j38xH0rjegj+Kcr+fpvuyK9FU1w6pobxlb/LxKcnP0+GvGcPb5ml1iLhb/tas/Ttd/wD2W3ViLhb/ALWrP07Xf/2Wvhfs63/X9mfEvaUf+36NurMfp3XCRtLilqa89nI+pqJG+BLRG1p/zP8ArWnFmT07rdI6jxW7NY7s45Kmnkd4AuEbmj/K/wCpaOFY9Lhn4/Zm/iefRZY+H3R0eFUPHaDhzYWY43C22g0bH0gqe17Xkd6wL9dObrsqRVMPpHVFNLTyjAyyVhY4fDdxGivb6J2Sw37g/QUfaA1doc6inbvqADzRn83IQPztKttTc3Dp1pRcI5TfYRb0FOjGSm9u8zLwJ4HZ1g/E625DdJ7SaCFkzKgQVLnPIdE5rdAtG/WLfHwVqekx8hmT/MR/to1Yyrn0mPkMyf5iP9tGsVdTubqnOe+V9zJ20Le2nCG2H9ilvQYskFRfMiyCaMOlooYqancevL2pcXkeR1G0b8ifatXrNHoI/inK/n6b7si0up4tJu7ln4fYx4WkrWOPj9wiIucdAIiIAiIgCIiA8t3/ABTWfMP+6VgPgBkFsxbi9Yb5eZ/c9BBJKyaXRIZ2kL4wTrwBeN+xf6CSMbJG6N7Q5jgWuB8QVBf5HOGH+5dr/UP8V0rG8p0Kc4VE3q7vmc+9tKlacJwa/j3/ACP1XcYOGNHAZps1tLmgb1DKZXfqsBP/AGVK8XOPdVl1LNh/DG23KpfWtMU1Y2Bxmew9C2KMbcNg65jo9egB6q76XhNw0pjuPCLI7qD8JStk+9v6lKLRaLTaIOwtNsorfF/+OlgbE36mgLCnWtaL1Ri5P4tY8jKpSuaq0uSivhuUB6NnAqrx25QZhmULGXCIc1DQbDuwcR/rJCOnPruHhvZ661oxEWi5ualzPXM329vC3hogZU9O78bYp8xU/ejV88DvkexL9EwfcC6WW4ViuWSU8mR2Okub6YObCZgTyB2t60fHQ+pde1UFHarbT223U7KakpoxFDEz4rGgaAC3VbqM7aFFLrE00raULmdVvoymPSt4XVua2SmyCwU5nvNrY5j4Gj16mAnfK3zc07IHjzOHfoKn/R240ScPpH4vlEdQ+xOlcWuawmWhkJ9b1e8sJ7294OyO8g7QUSzDhrgmXTmoyDGqKrqD0M7Q6KV353sLXH6St1vfwVHkV45j2Y3Rqr2U3V59GWJeTPVZc7wu80bau25VZ6iIjZ1Vsa5v/E0kFp9hAK6tlvNovcEtRZrpRXGGGUwySUs7ZWteACWktJGwHA69qrim9HrhPDL2hxuSbXUNkr5yB9AeN/SrAxbHLFi9sNtx6101tpDIZHRQN0HPIALj4k6AGz5BU6qt0v62/ml+y3Sddv8AsS+Tf6OqiIq5vCwd6Vny+ZJ/hf3WFbxUSyDhrgmQXee73nGKCtr5+XtZ5WkufytDRvr4AAfQr/DruNrVc5LPTH2KN/ayuaahF465+5yMX4vcN6vHqCd2X2qleadnPDUTiOSN3KNtLXaOwenkuJnPpDcPbBb5Ta7ib9cOU9lT0jHchdrpzSEBobvv1s+xSP8Akc4Yf7l2v9Q/xXutnDHh5bZGyUmF2Jr2/Fe+jZI4fmLgSoUrNSziT+HQlxu3HGYr49TIOCYNl/GjPqi+V0MsFBWVRnuFxLC2Jjd9WR7+MQNNAG9dN9FuahpYKKigoqWNsVPTxtiiY3ua1o0APzAL6RsZFG2ONjWMYA1rWjQAHcAF+lF5eyuWumEtkTaWcbZPrlvdmJvSS4YXXCMwqMos0E3vFWVHuiGeEH/Q5SdljiPi+t1afLQ7wrf4K+kNYL3a4LXm1dDabzEAw1Uo5Kep1/W5u6N3mDoeR66F7zxRTwvgniZLFI0tex7Q5rge8EHvCrm98C+Fl2ndUTYpBTyuOyaSeSBv6jHBv/ZWfTqVekqdynlbNblf0KrQqupbtYe6ZLajMcRp6T3ZPlNkjp9bErq+INP5jzLtxvbIxr2ODmuALSO4hVtaeBPCq3PbJHicM8jfGpqJZgfztc4t/wCysljWsYGMaGtaNAAaAC59VUl7Nt+P/wBZfpOq/aJLwMR5R/tgw/8Auuj/AG0a26otPw7wmfJBkk2N0L7uKhtSKstPP2rSC1/f3ggfUpSrF7dRuFBRXqrBXtLaVBzbe7yZs9Oaw19TZ8eyGnjfJSUMk1PUkDYjMnIWOPkCWEb8y0eK+/ow8XsRouHlJi2RXantNdbTI2N9SeSOeJzy8EO7gRzEEHR6AjfXWhq6kpa+jmo62mhqaaZhZLDKwPY9p7wQehCrWXgDwokuHuw4vynm5jE2snbGT/wh/QewdPYt1O7oztlQrJ9NmjVUta0bh16LXXdMrL0kuIAzrE6+yYOH19ktvLVXu5taWwDTgI4Wkj1iXEHp5DXQEj7egj+Kcr+fpvuyK/BiOMNxd+MMsdDHZZAA+jjiDY3dQeoHedgHfeV/MSxHGsTjqI8cs9NbGVJa6YQgjnLd63vy2frSV7S9FlQhFrr+txGzqekxrylnp/uDuLDcVXFw/wDSonr782SGkpr5PI95aekMxfyyaHeOWQO6LcijGbcP8NzQxuyawUtwkjbysmJdHK1v5POwh2up6b11Wmxuo0HJTWVJYeDbe20q6i4PDi8nvoMqxivjgkositNSydzWxGOsjdzucQGgaPUkkDXmuPxjwmDiBgNdj0j2RVDtTUczu6Odu+Un2HZafY4riWHgVwysl7pbxQ2GUVdHMyenc+tmcI5GuDmu0XaOiB37CstaZShTmpUW+nejdGM6kHGsl17jBGAZRlfBHiJPFcLdNF3Q3Ggl9UTxg9HNPdsdS142Op7wStgYZxXwDK6Nk9tyShhlcNupayVsE7D4gsceuvNux7V3sqxXG8qpG0uRWWiuUTfidvEC5n/C7vb9BCgT/R54TOn7UY3K1u99mLhUcv39/wDdXq93bXSUqqcZd6w8lKha3Fs9NNpx+JYVvyKwXC5utlvvdtq65kRmdTwVTJJGsBALi0EkDbmjftUN9Jj5DMn+Yj/bRrvYXw9wzDZnz41j9Lb53xdk6Zpc+RzNg8pe4l2tgHv8Au3fLTbr5ap7VdqSOsoagBssMg214BBG/pAVGM6dOtGUctJpl2UJ1KUoyxlpmdfQR/FOV/P033ZFpdcPEsRxrE46iPHLPTWxlSWumEII5y3et78tn613FleV1XryqRXR/oxtKLoUY032BERVSyEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAER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" class="header-logo" alt="Die Berater Logo">
+    </div>
+    <div style="flex:1;">
+      <div class="header-title">Die Berater – Lerner Lachenmaier &amp; Partner</div>
+      <div class="header-subtitle">Verfahrensdokumentation &middot; GoBD / DSGVO</div>
+    </div>
+    <div class="header-badge">Mandanten-Fragebogen</div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:14%"></div></div>
+</div>
+
+<!-- NAV -->
+<div class="nav-wrap">
+  <div class="nav">
+    <div class="nav-tab active" onclick="showSection(0)"><span class="tab-num">A</span>Allgemeine Angaben</div>
+    <div class="nav-tab" onclick="showSection(1)"><span class="tab-num">B</span>Mitarbeiter &amp; Hardware</div>
+    <div class="nav-tab" onclick="showSection(2)"><span class="tab-num">C</span>Software &amp; Vorsysteme</div>
+    <div class="nav-tab" onclick="showSection(3)"><span class="tab-num">D</span>Kassensysteme</div>
+    <div class="nav-tab" onclick="showSection(4)"><span class="tab-num">E</span>Prozesse</div>
+    <div class="nav-tab" onclick="showSection(5)"><span class="tab-num">F</span>IKS &amp; Dokumente</div>
+    <div class="nav-tab" onclick="showSection(6)"><span class="tab-num">G</span>Datenschutz</div>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ═══ A: ALLGEMEINE ANGABEN (jetzt ZUERST) ═══ -->
+<div class="section active" id="sec0">
+  <div class="section-hero"><div class="hero-icon">🏢</div><div><h2>Allgemeine Angaben</h2><p>Unternehmensdaten und Rahmenbedingungen der Verfahrensdokumentation</p></div></div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-num">1</div><div class="card-title">Erstellung &amp; Verantwortlicher</div></div>
+    <div class="card-body">
+      <div class="form-row"><div class="form-label">Erstmalige Erstellung? <span class="req">*</span></div><div class="radio-group"><label class="radio-option"><input type="radio" name="erst" value="ja"> Ja</label><label class="radio-option"><input type="radio" name="erst" value="nein"> Nein, Aktualisierung</label></div></div>
+      <div class="form-row"><div class="form-label">Datum der Erstellung <span class="req">*</span></div><input class="form-input" type="date" id="erstellDatum"></div>
+      <div class="form-row"><div class="form-label">Verantwortlicher / Freigabe <span class="req">*</span></div><input class="form-input" placeholder="Name der zuständigen Person"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-num">2</div><div class="card-title">Unternehmensdaten</div></div>
+    <div class="card-body">
+      <div class="form-row"><div class="form-label">Firmenname <span class="req">*</span></div><input class="form-input" placeholder="Vollständiger Name laut Handelsregister"></div>
+      <div class="form-row"><div class="form-label">Rechtsform <span class="req">*</span></div><select class="form-select"><option value="">– Bitte wählen –</option><option>GmbH</option><option>GbR</option><option>Einzelunternehmen</option><option>UG (haftungsbeschränkt)</option><option>AG</option><option>OHG</option><option>KG</option><option>GmbH &amp; Co. KG</option><option>Freiberufler</option><option>Partnerschaftsgesellschaft</option></select></div>
+      <div class="form-row"><div class="form-label">Steuernummer <span class="req">*</span></div><input class="form-input" placeholder="z.B. 99/123/45678"></div>
+      <div class="form-row"><div class="form-label">Umsatzsteuer-ID <span class="tag-opt">Optional</span></div><input class="form-input" placeholder="z.B. DE123456789"></div>
+      <div class="form-row"><div class="form-label">Anschrift <span class="req">*</span></div><input class="form-input" placeholder="Straße, PLZ, Ort"></div>
+      <div class="form-row"><div class="form-label">Telefon</div><input class="form-input" type="tel" placeholder="Telefonnummer"></div>
+      <div class="form-row"><div class="form-label">E-Mail</div><input class="form-input" type="email" placeholder="E-Mail-Adresse"></div>
+      <div class="form-row"><div class="form-label">Gründungsdatum</div><input class="form-input" type="date"></div>
+      <div class="form-row"><div class="form-label">Wirtschaftsjahr <span class="req">*</span></div><select class="form-select"><option>Kalenderjahr (01.01.–31.12.)</option><option>Abweichendes Wirtschaftsjahr</option></select></div>
+      <div class="form-row"><div class="form-label">Branche / Tätigkeit <span class="req">*</span></div><input class="form-input" placeholder="Kurze Beschreibung der Geschäftstätigkeit"></div>
+      <div class="form-row"><div class="form-label">Anzahl Mitarbeiter gesamt <span class="req">*</span></div><input class="form-input" type="number" placeholder="z.B. 12"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-num">3</div><div class="card-title">Besonderheiten &amp; Umfeld</div></div>
+    <div class="card-body">
+      <div class="form-row"><div class="form-label">Branchenbesonderheiten (Archivierung)? <span class="req">*</span></div><div class="radio-group"><label class="radio-option"><input type="radio" name="branche" value="ja"> Ja</label><label class="radio-option"><input type="radio" name="branche" value="nein"> Nein</label></div></div>
+      <div class="form-row"><div class="form-label">Geschäftstätigkeit an festem Standort? <span class="req">*</span></div><div class="radio-group"><label class="radio-option"><input type="radio" name="standort" value="ja"> Ja</label><label class="radio-option"><input type="radio" name="standort" value="nein"> Nein</label></div></div>
+      <div class="form-row"><div class="form-label">Einweisung Mitarbeiter in Prozesse? <span class="req">*</span></div><div class="radio-group"><label class="radio-option"><input type="radio" name="maeinw" value="ja"> Ja</label><label class="radio-option"><input type="radio" name="maeinw" value="nein"> Nein</label></div></div>
+      <div class="form-row"><div class="form-label">Ergänzende Angaben <span class="tag-opt">Optional</span></div><textarea class="form-textarea" placeholder="Individuelle Angaben zum Unternehmen und organisatorischen Umfeld"></textarea></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ B: MITARBEITER & HARDWARE ═══ -->
+<div class="section" id="sec1">
+  <div class="section-hero"><div class="hero-icon">👥</div><div><h2>Mitarbeiter &amp; Hardware</h2><p>Positionen, Abteilungen und alle IT-Geräte des Unternehmens</p></div></div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-num">1</div><div class="card-title">Mitarbeiter mit Systemzugang</div></div>
+    <div class="card-body">
+      <div class="form-row"><div class="form-label">Davon in der Buchhaltung <span class="req">*</span></div><input class="form-input" type="number" placeholder="z.B. 2"></div>
+      <div class="form-row"><div class="form-label">Zugriffsrechte geregelt? <span class="req">*</span></div><div class="radio-group"><label class="radio-option"><input type="radio" name="zugr" value="ja"> Ja</label><label class="radio-option"><input type="radio" name="zugr" value="nein"> Nein</label></div></div>
+      <div class="form-row"><div class="form-label">Homeoffice vorhanden? <span class="tag-opt">Optional</span></div><div class="radio-group"><label class="radio-option"><input type="radio" name="home" value="ja"> Ja</label><label class="radio-option"><input type="radio" name="home" value="nein"> Nein</label></div></div>
+      <div style="margin-top:14px;">
+        <div class="items-container" id="mitarbeiterList"></div>
+        <button class="btn-add" onclick="addMitarbeiter()">+ Weiteren Mitarbeiter hinzufügen</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-num">2</div><div class="card-title">Hardware – IT-Geräte</div></div>
+    <div class="card-body">
+      <div class="hint">Bitte jedes steuerrelevante Gerät einzeln eintragen (Server, PCs, Drucker, Scanner etc.)</div>
+      <div class="items-container" id="hardwareList"></div>
+      <button class="btn-add" onclick="addHardware()">+ Weiteres Gerät hinzufügen</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-num">3</div><div class="card-title">Dienstleister</div></div>
+    <div class="card-body">
+      <div class="form-row"><div class="form-label">IT-Dienstleister <span class="req">*</span></div><input class="form-input" placeholder="Name, Firma, Kontakt"></div>
+      <div class="form-row"><div class="form-label">Steuerberater <span class="req">*</span></div><input class="form-input" placeholder="Name der Kanzlei"></div>
+      <div class="form-row"><div class="form-label">Lohnbuchhaltung extern?</div><div class="radio-group"><label class="radio-option"><input type="radio" name="lohnext" value="ja"> Ja</label><label class="radio-option"><input type="radio" name="lohnext" value="nein"> Nein</label></div></div>
+      <div class="form-row"><div class="form-label">Datensicherung <span class="req">*</span></div><input class="form-input" placeholder="Wie oft? Wo gespeichert? (NAS, Cloud, extern)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ C: SOFTWARE ═══ -->
+<div class="section" id="sec2">
+  <div class="section-hero"><div class="hero-icon">💻</div><div><h2>Software &amp; Vorsysteme</h2><p>Alle eingesetzten Softwaresysteme</p></div></div>
+  <div class="card">
+    <div class="card-header"><div class="card-num">1</div><div class="card-title">Softwareliste</div></div>
+    <div class="card-body">
+      <div class="hint">Bitte jede eingesetzte Software separat eintragen – Buchhaltung, ERP, Warenwirtschaft, Webshop, Lohn, etc.</div>
+      <div class="items-container" id="softwareList"></div>
+      <button class="btn-add" onclick="addSoftware()">+ Weitere Software hinzufügen</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-num">2</div><div class="card-title">Vorsystem-Rahmendaten</div></div>
+    <div class="card-body">
+      <div class="form-row"><div class="form-label">Wer entscheidet über neue Vorsysteme? <span class="req">*</span></div><select class="form-select"><option value="">– Bitte wählen –</option><option>Geschäftsleitung</option><option>IT-Abteilung</option><option>Buchhaltung</option><option>Fachbereich</option><option>Gemeinsam</option></select></div>
+      <div class="form-row"><div class="form-label">Steuerliche Relevanz geprüft durch? <span class="req">*</span></div><select class="form-select"><option value="">– Bitte wählen –</option><option>Geschäftsleitung</option><option>Steuerberater</option><option>Buchhalter/in</option><option>IT-Verantwortlicher</option></select></div>
+      <div class="form-row"><div class="form-label">Steuerliche Aufbewahrung sichergestellt? <span class="req">*</span></div><div class="radio-group"><label class="radio-option"><input type="radio" name="vsAuf" value="ja"> Ja</label><label class="radio-option"><input type="radio" name="vsAuf" value="nein"> Nein</label></div></div>
+      <div class="form-row"><div class="form-label">TOM – Maßnahmen <span class="tag-opt">Optional</span></div><textarea class="form-textarea" placeholder="Technisch-organisatorische Maßnahmen beschreiben"></textarea></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ D: KASSE ═══ -->
+<div class="section" id="sec3">
+  <div class="section-hero"><div class="hero-icon">🏧</div><div><h2>Kassensysteme</h2><p>EDV-Registrierkassen und Kassenaufsteller</p></div></div>
+  <div class="warn">⚠️ <strong>Pflicht seit 01.01.2020:</strong> Alle elektronischen Kassensysteme müssen mit einer zertifizierten TSE ausgestattet sein (KassenSichV).</div>
+  <div class="card">
+    <div class="card-header"><div class="card-num">1</div><div class="card-title">Kassensysteme</div></div>
+    <div class="card-body">
+      <div class="items-container" id="kasseList"></div>
+      <button class="btn-add" onclick="addKasse()">+ Weiteres Kassensystem hinzufügen</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-num">2</div><div class="card-title">Kassenaufsteller</div></div>
+    <div class="card-body">
+      <div class="items-container" id="aufstellerList"></div>
+      <button class="btn-add" onclick="addAufsteller()">+ Weiteren Kassenaufsteller hinzufügen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ E: PROZESSE ═══ -->
+<div class="section" id="sec4">
+  <div class="section-hero"><div class="hero-icon">🔄</div><div><h2>Prozesse</h2><p>Belegeingang, Belegausgang, Eigenbelege &amp; Kasse</p></div></div>
+  <div class="tile-grid">
+    <div class="tile active" onclick="showProc(0,this)"><div class="tile-icon">📥</div>BELEGEINGANG</div>
+    <div class="tile" onclick="showProc(1,this)"><div class="tile-icon">📤</div>BELEGAUSGANG</div>
+    <div class="tile" onclick="showProc(2,this)"><div class="tile-icon">📄</div>EIGENBELEGE</div>
+    <div class="tile" onclick="showProc(3,this)"><div class="tile-icon">💰</div>KASSE</div>
+  </div>
+  <div id="proc0"><div class="card"><div class="card-header"><div class="card-num">E1</div><div class="card-title">Belegeingang</div></div><div class="card-body">
+    <div class="form-row"><div class="form-label">Eingangsweg <span class="req">*</span></div><div class="check-group"><label class="check-option"><input type="checkbox"> Post</label><label class="check-option"><input type="checkbox"> E-Mail</label><label class="check-option"><input type="checkbox"> Rechnungsportal</label><label class="check-option"><input type="checkbox"> Scan-Dienstleister</label></div></div>
+    <div class="form-row"><div class="form-label">Zuständig für Eingang <span class="req">*</span></div><input class="form-input" placeholder="Name / Abteilung"></div>
+    <div class="form-row"><div class="form-label">Freigabeprozess <span class="req">*</span></div><textarea class="form-textarea" placeholder="Wer prüft und genehmigt? Ablauf..."></textarea></div>
+    <div class="form-row"><div class="form-label">Archivierung <span class="req">*</span></div><select class="form-select"><option value="">– Bitte wählen –</option><option>Nur Papier</option><option>Scan + Papier</option><option>Elektronisch (original digital)</option><option>DMS-System</option></select></div>
+  </div></div></div>
+  <div id="proc1" style="display:none"><div class="card"><div class="card-header"><div class="card-num">E2</div><div class="card-title">Belegausgang</div></div><div class="card-body">
+    <div class="form-row"><div class="form-label">Rechnungserstellung <span class="req">*</span></div><input class="form-input" placeholder="Welche Software / Vorlage?"></div>
+    <div class="form-row"><div class="form-label">Versandweg <span class="req">*</span></div><div class="check-group"><label class="check-option"><input type="checkbox"> Post</label><label class="check-option"><input type="checkbox"> E-Mail</label><label class="check-option"><input type="checkbox"> Kundenportal</label><label class="check-option"><input type="checkbox"> EDI</label></div></div>
+    <div class="form-row"><div class="form-label">Fortlaufende Nummerierung? <span class="req">*</span></div><div class="radio-group"><label class="radio-option"><input type="radio" name="rnr" value="ja"> Ja</label><label class="radio-option"><input type="radio" name="rnr" value="nein"> Nein</label></div></div>
+    <div class="form-row"><div class="form-label">Mahnwesen</div><div class="radio-group"><label class="radio-option"><input type="radio" name="mahn" value="m"> Manuell</label><label class="radio-option"><input type="radio" name="mahn" value="a"> Automatisiert</label></div></div>
+  </div></div></div>
+  <div id="proc2" style="display:none"><div class="card"><div class="card-header"><div class="card-num">E3</div><div class="card-title">Eigenbelege</div></div><div class="card-body">
+    <div class="form-row"><div class="form-label">Werden Eigenbelege erstellt? <span class="req">*</span></div><div class="radio-group"><label class="radio-option"><input type="radio" name="eigen" value="ja"> Ja</label><label class="radio-option"><input type="radio" name="eigen" value="nein"> Nein</label></div></div>
+    <div class="form-row"><div class="form-label">Wann? / Wer erstellt?</div><textarea class="form-textarea" placeholder="Beschreiben Sie wann und von wem Eigenbelege erstellt werden"></textarea></div>
+    <div class="form-row"><div class="form-label">Archivierung</div><select class="form-select"><option value="">– Bitte wählen –</option><option>Papier</option><option>Digital</option><option>Beides</option></select></div>
+  </div></div></div>
+  <div id="proc3" style="display:none"><div class="card"><div class="card-header"><div class="card-num">E4</div><div class="card-title">Kasse / Bargeschäfte</div></div><div class="card-body">
+    <div class="form-row"><div class="form-label">Kasse vorhanden? <span class="req">*</span></div><div class="radio-group"><label class="radio-option"><input type="radio" name="kasseP" value="ja"> Ja</label><label class="radio-option"><input type="radio" name="kasseP" value="nein"> Nein</label></div></div>
+    <div class="form-row"><div class="form-label">Kassenart <span class="req">*</span></div><select class="form-select"><option value="">– Bitte wählen –</option><option>Elektronisch (TSE-zertifiziert)</option><option>Offene Ladenkasse</option><option>Manuelles Kassenbuch</option></select></div>
+    <div class="form-row"><div class="form-label">Kassenführung &amp; Kontrolle <span class="req">*</span></div><input class="form-input" placeholder="Wer führt? Wer kontrolliert?"></div>
+    <div class="form-row"><div class="form-label">Kassenabschluss <span class="req">*</span></div><select class="form-select"><option value="">– Bitte wählen –</option><option>Täglich (empfohlen)</option><option>Je Schicht</option><option>Wöchentlich</option></select></div>
+  </div></div></div>
+</div>
+
+<!-- ═══ F: IKS & DOKUMENTE ═══ -->
+<div class="section" id="sec5">
+  <div class="section-hero"><div class="hero-icon">🛡️</div><div><h2>IKS &amp; Dokumente</h2><p>Interne Kontrollsystem-Unterlagen – Liste der beizufügenden Dokumente</p></div></div>
+  <div class="info">📎 Laden Sie hier Ihre Dokumente hoch. Im fertigen PDF erscheint eine Übersicht aller hochgeladenen Dateien. Die Dateien selbst schicken Sie bitte separat per E-Mail mit.</div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-num">1</div><div class="card-title">IKS-Dokumente</div></div>
+    <div class="card-body" style="display:flex;flex-direction:column;gap:8px;" id="iksUploadZones"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-num">2</div><div class="card-title">Kontrollmaßnahmen</div></div>
+    <div class="card-body">
+      <div class="form-row"><div class="form-label">Buchung vs. Zahlung getrennt? <span class="req">*</span></div><div class="radio-group"><label class="radio-option"><input type="radio" name="iks1" value="ja"> Ja</label><label class="radio-option"><input type="radio" name="iks1" value="nein"> Nein</label></div></div>
+      <div class="form-row"><div class="form-label">Stornoberechtigung <span class="req">*</span></div><input class="form-input" placeholder="Wer darf gebuchte Belege stornieren?"></div>
+      <div class="form-row"><div class="form-label">Audit-Trail vorhanden? <span class="req">*</span></div><div class="radio-group"><label class="radio-option"><input type="radio" name="iks2" value="ja"> Ja</label><label class="radio-option"><input type="radio" name="iks2" value="nein"> Nein</label></div></div>
+      <div class="form-row"><div class="form-label">Monatsabschluss durch? <span class="req">*</span></div><input class="form-input" placeholder="Wer führt durch? Bis wann?"></div>
+      <div class="form-row"><div class="form-label">OPOS-Prüfung <span class="req">*</span></div><select class="form-select"><option value="">– Bitte wählen –</option><option>Täglich</option><option>Wöchentlich</option><option>Monatlich</option><option>Quartalsweise</option></select></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ G: DATENSCHUTZ ═══ -->
+<div class="section" id="sec6">
+  <div class="section-hero"><div class="hero-icon">🔒</div><div><h2>Datenschutz (DSGVO)</h2><p>Mitarbeiter, Kunden, Lieferanten, Datenpannen, Datenverwaltung</p></div></div>
+  <div class="tile-grid" id="dsTiles">
+    <div class="tile active" onclick="showDs(0,this)"><div class="tile-icon">👥</div>MITARBEITER</div>
+    <div class="tile" onclick="showDs(1,this)"><div class="tile-icon">🛒</div>KUNDEN</div>
+    <div class="tile" onclick="showDs(2,this)"><div class="tile-icon">🤝</div>LIEFERANTEN</div>
+    <div class="tile" onclick="showDs(3,this)"><div class="tile-icon">⚠️</div>DATENPANNEN</div>
+    <div class="tile" onclick="showDs(4,this)"><div class="tile-icon">🗄️</div>DATENVERWALTUNG</div>
+  </div>
+  <div id="ds0"><div class="card"><div class="card-header"><div class="card-num">G1</div><div class="card-title">Datenschutz – Mitarbeiter</div></div><div class="card-body">
+    <div id="dsUp0" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
+    <div class="form-row"><div class="form-label">Datenschutzbeauftragter bestellt? <span class="req">*</span><span class="opt-note">Pflicht ab 20 MA mit Datenzugang</span></div><div class="radio-group"><label class="radio-option"><input type="radio" name="dsb" value="ja"> Ja</label><label class="radio-option"><input type="radio" name="dsb" value="nein"> Nein</label></div></div>
+  </div></div></div>
+  <div id="ds1" style="display:none"><div class="card"><div class="card-header"><div class="card-num">G2</div><div class="card-title">Datenschutz – Kunden</div></div><div class="card-body">
+    <div id="dsUp1" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
+    <div class="form-row"><div class="form-label">AVV mit Steuerberater? <span class="req">*</span></div><div class="radio-group"><label class="radio-option"><input type="radio" name="avv" value="ja"> Ja</label><label class="radio-option"><input type="radio" name="avv" value="nein"> Nein</label><label class="radio-option"><input type="radio" name="avv" value="ip"> In Bearbeitung</label></div></div>
+  </div></div></div>
+  <div id="ds2" style="display:none"><div class="card"><div class="card-header"><div class="card-num">G3</div><div class="card-title">Datenschutz – Lieferanten &amp; Partner</div></div><div class="card-body">
+    <div id="dsUp2" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
+    <div class="form-row"><div class="form-label">Drittlandtransfer? <span class="tag-opt">Optional</span></div><div class="radio-group"><label class="radio-option"><input type="radio" name="dritt" value="ja"> Ja</label><label class="radio-option"><input type="radio" name="dritt" value="nein"> Nein</label></div></div>
+  </div></div></div>
+  <div id="ds3" style="display:none"><div class="card"><div class="card-header"><div class="card-num">G4</div><div class="card-title">Datenpannen</div></div><div class="card-body">
+    <div class="warn">⚠️ <strong>72-Stunden-Meldepflicht</strong> bei der Aufsichtsbehörde (Art. 33 DSGVO)</div>
+    <div id="dsUp3" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;margin-top:8px;"></div>
+    <div class="form-row"><div class="form-label">Prozess vorhanden? <span class="req">*</span></div><div class="radio-group"><label class="radio-option"><input type="radio" name="dppro" value="ja"> Ja</label><label class="radio-option"><input type="radio" name="dppro" value="nein"> Nein</label></div></div>
+  </div></div></div>
+  <div id="ds4" style="display:none"><div class="card"><div class="card-header"><div class="card-num">G5</div><div class="card-title">Datenverwaltung – TOM &amp; Löschkonzept</div></div><div class="card-body">
+    <div id="dsUp4" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
+    <div class="form-row"><div class="form-label">Verarbeitungsverzeichnis (Art. 30 DSGVO)? <span class="req">*</span></div><div class="radio-group"><label class="radio-option"><input type="radio" name="vvt" value="ja"> Ja</label><label class="radio-option"><input type="radio" name="vvt" value="nein"> Nein</label></div></div>
+    <div class="form-row"><div class="form-label">GoBD-Fristen bekannt (10 Jahre)? <span class="req">*</span></div><div class="radio-group"><label class="radio-option"><input type="radio" name="gobd" value="ja"> Ja</label><label class="radio-option"><input type="radio" name="gobd" value="nein"> Nein</label></div></div>
+  </div></div></div>
+</div>
+
+</div><!-- /main -->
+
+<!-- ACTIONS -->
+<div class="actions">
+  <button class="btn btn-secondary" id="btnBack" onclick="navigate(-1)" style="visibility:hidden">← Zurück</button>
+  <div class="step-info" id="stepInfo"><strong>Abschnitt 1</strong> von 7</div>
+  <div style="display:flex;gap:8px;">
+    <button class="btn btn-secondary" onclick="window.print()">🖨️ Drucken</button>
+    <button class="btn btn-primary" id="btnNext" onclick="navigate(1)">Weiter →</button>
+  </div>
+</div>
+
+<script>
+// ═══ NAVIGATION ═══
+const TOTAL=7; let cur=0;
+function showSection(i){
+  document.querySelectorAll('.section').forEach(function(s,j){s.classList.toggle('active',j===i);});
+  document.querySelectorAll('.nav-tab').forEach(function(t,j){t.classList.toggle('active',j===i);});
+  cur=i;
+  document.getElementById('btnBack').style.visibility=i===0?'hidden':'visible';
+  var last=i===TOTAL-1;
+  var nb=document.getElementById('btnNext');
+  nb.textContent=last?'✅ Fertigstellen & PDF erstellen':'Weiter →';
+  nb.className=last?'btn btn-success':'btn btn-primary';
+  document.getElementById('stepInfo').innerHTML='<strong>Abschnitt '+(i+1)+'</strong> von '+TOTAL;
+  document.getElementById('progressFill').style.width=((i+1)/TOTAL*100)+'%';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function navigate(dir){
+  var n=cur+dir;
+  if(n>=0&&n<TOTAL) showSection(n);
+  else if(n>=TOTAL) document.getElementById('finishOverlay').classList.add('show');
+}
+function doPrint(){
+  document.getElementById('finishOverlay').classList.remove('show');
+  // Show all sections for print
+  document.querySelectorAll('.section').forEach(function(s){s.style.display='block';});
+  window.print();
+  // Restore
+  setTimeout(function(){
+    document.querySelectorAll('.section').forEach(function(s,i){s.style.display=i===cur?'block':'none';});
+    document.getElementById('sec'+cur).classList.add('active');
+  },1000);
+}
+
+// Set today as default date
+(function(){
+  var d=document.getElementById('erstellDatum');
+  if(d) d.value=new Date().toISOString().slice(0,10);
+})();
+
+// ═══ RADIO VISUAL ═══
+document.addEventListener('change',function(e){
+  if(e.target.type==='radio'){
+    var g=e.target.closest('.radio-group');
+    if(g) g.querySelectorAll('.radio-option').forEach(function(o){o.classList.toggle('sel',o.querySelector('input').checked);});
+  }
+});
+
+// ═══ TABS ═══
+function showProc(i,el){
+  [0,1,2,3].forEach(function(j){document.getElementById('proc'+j).style.display=j===i?'':'none';});
+  el.closest('.tile-grid').querySelectorAll('.tile').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
+}
+function showDs(i,el){
+  [0,1,2,3,4].forEach(function(j){document.getElementById('ds'+j).style.display=j===i?'':'none';});
+  document.getElementById('dsTiles').querySelectorAll('.tile').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
+}
+
+// ═══ DYNAMIC BLOCKS ═══
+var itemCounter=100;
+function makeRemoveBtn(){var b=document.createElement('button');b.className='btn-remove';b.type='button';b.textContent='✕ Entfernen';b.addEventListener('click',function(){removeItem(b);});return b;}
+function makeRow(lh,fh){var r=document.createElement('div');r.className='form-row';var l=document.createElement('div');l.className='form-label';l.innerHTML=lh;r.appendChild(l);var f=document.createElement('div');f.innerHTML=fh;if(f.children.length===1)r.appendChild(f.children[0]);else{while(f.firstChild)r.appendChild(f.firstChild);}return r;}
+function inp(ph,t){return '<input class="form-input" type="'+(t||'text')+'" placeholder="'+ph+'">';}
+function sel(opts){var h='<select class="form-select">';opts.forEach(function(o){h+='<option'+(o.val!==undefined?' value="'+o.val+'"':'')+'>'+( o.label||o)+'</option>';});return h+'</select>';}
+function radios(opts){var uid='r_'+(++itemCounter);var h='<div class="radio-group">';opts.forEach(function(o){h+='<label class="radio-option"><input type="radio" name="'+uid+'" value="'+o.v+'"> '+o.l+'</label>';});return h+'</div>';}
+function wrapBlock(title,rows){
+  var b=document.createElement('div');b.className='item-block';
+  var hdr=document.createElement('div');hdr.className='item-block-header';
+  var sp=document.createElement('span');sp.className='item-block-title';sp.textContent=title;hdr.appendChild(sp);hdr.appendChild(makeRemoveBtn());b.appendChild(hdr);
+  var body=document.createElement('div');body.className='item-block-body';rows.forEach(function(r){body.appendChild(r);});b.appendChild(body);return b;
+}
+function removeItem(btn){var bl=btn.closest('.item-block'),c=bl.parentElement;if(c.querySelectorAll('.item-block').length>1){bl.remove();renumber(c);}else alert('Mindestens ein Eintrag muss vorhanden bleiben.');}
+function renumber(c){var m={mitarbeiterList:'Mitarbeiter',hardwareList:'Gerät',softwareList:'Software',kasseList:'Kassensystem',aufstellerList:'Kassenaufsteller'};var lb=m[c.id]||'Eintrag';c.querySelectorAll('.item-block').forEach(function(b,i){var t=b.querySelector('.item-block-title');if(t)t.textContent=lb+' '+(i+1);});}
+function appendTo(id,block){var c=document.getElementById(id);c.appendChild(block);renumber(c);}
+
+function buildMitarbeiter(){return wrapBlock('Mitarbeiter',[makeRow('Name <span class="req">*</span>',inp('Vor- und Nachname')),makeRow('Funktion / Position <span class="req">*</span>',inp('z.B. Buchhalter/in, Geschäftsführer')),makeRow('Abteilung',inp('z.B. Buchhaltung, IT')),makeRow('Zugriffsebene',sel([{val:'',label:'– Bitte wählen –'},'Nur lesen','Buchen','Freigeben','Administrator']))]);}
+function addMitarbeiter(){appendTo('mitarbeiterList',buildMitarbeiter());}
+
+function buildHardware(){return wrapBlock('Gerät',[makeRow('Typ <span class="req">*</span>',sel([{val:'',label:'– Bitte wählen –'},'Inhaus-Server','Server-Client','PC, Laptop, Tablet','Datenspeicher','Mietserver','Cloud','Scanner','Drucker','Fax','Smartphone','Multifunktionsgerät','Monitor'])),makeRow('Bezeichnung <span class="req">*</span>',inp('z.B. Buchhaltungs-PC 1')),makeRow('Hersteller',inp('z.B. Dell, HP, Apple')),makeRow('Modell',inp('Modell')),makeRow('Seriennummer',inp('Seriennummer')),makeRow('Standort',inp('z.B. Büro EG, Serverraum')),makeRow('Inbetriebnahme',inp('','date')),makeRow('Betreuer',sel([{val:'',label:'– Bitte wählen –'},'Intern','IT-Dienstleister','Sonstiger']))]);}
+function addHardware(){appendTo('hardwareList',buildHardware());}
+
+function buildSoftware(){
+  var uid=++itemCounter;var vsn='vs_'+uid;
+  var bl=wrapBlock('Software',[makeRow('Typ <span class="req">*</span>',sel([{val:'',label:'– Bitte wählen –'},'Einzelplatzinstallation','Serverinstallation','Webservice (Cloud)','Mobile Applikation (App)','Software as a Service (SaaS)','Webshop','Online Marketplace'])),makeRow('Name <span class="req">*</span>',inp('z.B. DATEV, Lexware, Shopify')),makeRow('Hersteller',inp('Hersteller')),makeRow('Version / Lizenzmodell',inp('z.B. DATEV Pro, Cloud-Abo'))]);
+  var vr=document.createElement('div');vr.className='form-row';var vl=document.createElement('div');vl.className='form-label';vl.innerHTML='Als Vorsystem? <span class="req">*</span>';vr.appendChild(vl);
+  var rg=document.createElement('div');rg.className='radio-group';
+  var sub=document.createElement('div');sub.className='subsection vs-detail';
+  sub.innerHTML='<div class="form-row"><div class="form-label">Software-Funktion</div>'+inp('z.B. Verkauf, Lager')+'</div><div class="form-row"><div class="form-label">Verwendungszeitraum</div>'+inp('Von – Bis')+'</div><div class="form-row"><div class="form-label">Datenübergabe</div>'+sel([{val:'',label:'– Bitte wählen –'},'Manuell (Export/Import)','Automatische Schnittstelle','API','DATEV-Format','CSV','XML'])+'</div>';
+  ['ja','nein'].forEach(function(v){var lb=document.createElement('label');lb.className='radio-option';var i=document.createElement('input');i.type='radio';i.name=vsn;i.value=v;if(v==='nein')i.checked=true;i.addEventListener('change',function(){sub.classList.toggle('show',v==='ja');});lb.appendChild(i);lb.appendChild(document.createTextNode(' '+(v==='ja'?'Ja':'Nein')));rg.appendChild(lb);});
+  vr.appendChild(rg);bl.querySelector('.item-block-body').appendChild(vr);bl.querySelector('.item-block-body').appendChild(sub);return bl;
+}
+function addSoftware(){appendTo('softwareList',buildSoftware());}
+
+function buildKasse(){return wrapBlock('Kassensystem',[makeRow('Typ <span class="req">*</span>',sel(['EDV-Registrierkasse','PC-Kassensystem','App-basiertes Kassensystem','Offene Ladenkasse','Taxameter'])),makeRow('Bezeichnung <span class="req">*</span>',inp('z.B. Kasse Verkauf EG')),makeRow('Hersteller',inp('z.B. Gastrofix, Vectron')),makeRow('Seriennummer',inp('Seriennummer')),makeRow('TSE-zertifiziert? <span class="req">*</span>',radios([{v:'ja',l:'Ja'},{v:'nein',l:'Nein'}])),makeRow('TSE-Anbieter',inp('z.B. Swissbit, Epson')),makeRow('Kassenabschluss',sel([{val:'',label:'– Bitte wählen –'},'Täglich','Je Schicht','Wöchentlich'])),makeRow('Standort',inp('z.B. Filiale 1, Eingang'))]);}
+function addKasse(){appendTo('kasseList',buildKasse());}
+
+function buildAufsteller(){return wrapBlock('Kassenaufsteller',[makeRow('Firma <span class="req">*</span>',inp('Firma')),makeRow('Anschrift',inp('Anschrift')),makeRow('Ansprechpartner',inp('Ansprechpartner')),makeRow('Telefon',inp('Telefon','tel')),makeRow('E-Mail',inp('E-Mail','email')),makeRow('Homepage',inp('Homepage','url'))]);}
+function addAufsteller(){appendTo('aufstellerList',buildAufsteller());}
+
+// ═══ UPLOAD ZONES ═══
+var uploadData={};
+var zoneDefs={
+  iksUploadZones:[
+    {k:'checklisten',   l:'Checklisten',                        s:'Interne Checklisten'},
+    {k:'pruefschema',   l:'Prüf- und Kontrollschemata',          s:'Festgelegte Prüf- und Kontrollschemata'},
+    {k:'arbeitsanw',    l:'Arbeitsanweisungen',                  s:'Allgemeine Arbeitsanweisungen an Mitarbeiter'},
+    {k:'progranw',      l:'Programmier- & Verarbeitungsanw.',    s:'Anweisungen zur Einrichtung techn. Geräte'},
+    {k:'zugangskont',   l:'Zugangskontrollen',                   s:'Dokumentation der eingerichteten Zugangskontrollen'},
+    {k:'schulungiks',   l:'Schulungsunterlagen',                 s:'Interne Schulungsunterlagen'},
+    {k:'protokolle',    l:'Protokolle',                         s:'Protokolle über Änderungen und Kontrollen'},
+    {k:'verantwort',    l:'Zuweisung Verantwortlichkeiten',      s:'Tätigkeitsbeschreibungen, Aufgabenverteilung'},
+    {k:'zertifikate',   l:'Bescheinigungen & Zertifikate',       s:'Ihre Bescheinigungen und Zertifikate'},
+  ],
+  dsUp0:[
+    {k:'ds_heim',  l:'Vereinbarung Heimarbeitsplatz',       s:''},
+    {k:'ds_inet',  l:'Zusatzvereinbarung Internet/E-Mail',  s:''},
+    {k:'ds_arbv',  l:'Datenverarbeitung Arbeitsverhältnis', s:''},
+    {k:'ds_schu',  l:'Schulung Datenschutz – Dokumentation',s:''},
+  ],
+  dsUp1:[
+    {k:'ds_kdv',   l:'Datenschutzvereinbarung',             s:''},
+    {k:'ds_info',  l:'Datenschutzinformation',              s:''},
+    {k:'ds_avv',   l:'Auftragsdatenverarbeitungsverträge',  s:''},
+  ],
+  dsUp2:[
+    {k:'ds_lavv',  l:'Auftragsdatenverarbeitungsverträge',  s:''},
+  ],
+  dsUp3:[
+    {k:'ds_pdok',  l:'Dokumentation Datenpannen',           s:''},
+    {k:'ds_pmb',   l:'Merkblatt – Verhalten bei Datenpannen',s:''},
+  ],
+  dsUp4:[
+    {k:'ds_tom',   l:'Dokumentation TOM',                   s:'Technische & organisatorische Maßnahmen'},
+    {k:'ds_sich',  l:'Datensicherungskonzept',               s:''},
+    {k:'ds_loesch',l:'Löschkonzept',                         s:''},
+  ]
+};
+
+function buildAllUploadZones(){
+  Object.keys(zoneDefs).forEach(function(cid){
+    var c=document.getElementById(cid);if(!c)return;
+    zoneDefs[cid].forEach(function(def){
+      uploadData[def.k]=[];
+      c.appendChild(buildZone(def.k,def.l,def.s));
+    });
+  });
+}
+
+function buildZone(key,label,sub){
+  var zone=document.createElement('div');zone.className='upload-zone';zone.dataset.key=key;
+  var hdr=document.createElement('div');hdr.className='upload-zone-header';
+  var info=document.createElement('div');
+  var lb=document.createElement('div');lb.className='upload-zone-label';lb.textContent=label;info.appendChild(lb);
+  if(sub){var s=document.createElement('div');s.className='upload-zone-sub';s.textContent=sub;info.appendChild(s);}
+  hdr.appendChild(info);
+  var fi=document.createElement('input');fi.type='file';fi.multiple=true;fi.className='hidden-file';
+  fi.accept='.pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.tif,.tiff';
+  fi.addEventListener('change',function(){addFiles(key,fi.files);fi.value='';});
+  var btn=document.createElement('button');btn.className='btn-upload-real';btn.type='button';btn.textContent='+ Datei(en) wählen';
+  btn.addEventListener('click',function(){fi.click();});
+  var trig=document.createElement('div');trig.style.display='flex';trig.style.alignItems='center';trig.style.gap='8px';
+  trig.appendChild(fi);trig.appendChild(btn);hdr.appendChild(trig);zone.appendChild(hdr);
+  var hint=document.createElement('div');hint.className='drop-hint';hint.textContent='oder Datei(en) hier hineinziehen (PDF, Word, Excel, Bild)';zone.appendChild(hint);
+  var list=document.createElement('div');list.className='file-list';list.id='fl_'+key;zone.appendChild(list);
+  zone.addEventListener('dragover',function(e){e.preventDefault();zone.classList.add('drag-over');});
+  zone.addEventListener('dragleave',function(){zone.classList.remove('drag-over');});
+  zone.addEventListener('drop',function(e){e.preventDefault();zone.classList.remove('drag-over');addFiles(key,e.dataTransfer.files);});
+  return zone;
+}
+
+function addFiles(key,files){
+  Array.from(files).forEach(function(f){uploadData[key].push(f);});
+  renderList(key);
+}
+function removeFileItem(key,idx){uploadData[key].splice(idx,1);renderList(key);}
+function renderList(key){
+  var list=document.getElementById('fl_'+key);if(!list)return;list.innerHTML='';
+  uploadData[key].forEach(function(f,i){
+    var item=document.createElement('div');item.className='file-item';
+    var nm=document.createElement('span');nm.className='file-item-name';nm.textContent='📎 '+f.name;
+    var sz=document.createElement('span');sz.className='file-item-size';sz.textContent=fmtSize(f.size);
+    var rb=document.createElement('button');rb.className='file-item-remove';rb.textContent='✕';rb.addEventListener('click',function(){removeFileItem(key,i);});
+    item.appendChild(nm);item.appendChild(sz);item.appendChild(rb);list.appendChild(item);
+  });
+}
+function fmtSize(b){if(b<1024)return b+'B';if(b<1048576)return(b/1024).toFixed(1)+'KB';return(b/1048576).toFixed(1)+'MB';}
+
+// ═══ INIT ═══
+addMitarbeiter();
+addHardware();
+addSoftware();
+addKasse();
+addAufsteller();
+buildAllUploadZones();
+</script>
+</body>
+</html>
